@@ -13,7 +13,7 @@ make infra.up
 go run ./examples/local
 ```
 
-## Against CosmosDB on Azure
+## Against CosmosDB on Azure using Static Credentials
 
 ### Prerequisites
 
@@ -51,5 +51,5 @@ Then one can run the example via:
 
 ```bash
 cd ..
-go run ./examples/cosmos
+go run ./examples/cosmos_static_credentials/
 ```
