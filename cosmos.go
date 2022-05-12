@@ -470,7 +470,7 @@ func (c *cosmosImpl) IsHealthy() error {
 
 func additionalDNSTry(host string) (string, error) {
 	host = strings.ReplaceAll(host, "wss://", "")
-	host = strings.ReplaceAll(host, ":443", "")
+	host = strings.ReplaceAll(host, ":443/", "")
 
 	r := &net.Resolver{
 		PreferGo: true,
