@@ -10,6 +10,7 @@ import (
 
 	"sync"
 
+	"github.com/rs/zerolog"
 	"github.com/supplyon/gremcos/interfaces"
 
 	gorilla "github.com/gorilla/websocket"
@@ -51,24 +52,29 @@ type websocket struct {
 	// wsDialerFactory is a factory that creates
 	// dialers (functions that can establish a websocket connection)
 	wsDialerFactory websocketDialerFactory
+
+	logger zerolog.Logger
 }
 
 // NewWebsocket returns a WebSocket dialer to use when connecting to Gremlin Server
 func NewWebsocket(host string, options ...optionWebsocket) (interfaces.Dialer, error) {
 	createdWebsocket := &websocket{
-		timeout:         5 * time.Second,
+		timeout:         1 * time.Second,
 		writingWait:     15 * time.Second,
 		readingWait:     15 * time.Second,
 		connected:       atomic.NewBool(false),
 		readBufSize:     8192,
 		writeBufSize:    8192,
 		host:            host,
-		wsDialerFactory: gorillaWebsocketDialerFactory, // use the gorilla websocket as default
+		wsDialerFactory: nil,
 	}
 
 	for _, opt := range options {
 		opt(createdWebsocket)
 	}
+
+	// use the gorilla websocket as default
+	createdWebsocket.wsDialerFactory = gorillaWebsocketDialerFactory(createdWebsocket.logger)
 
 	// verify setup and fail as early as possible
 	if !strings.HasPrefix(createdWebsocket.host, "ws://") && !strings.HasPrefix(createdWebsocket.host, "wss://") {
@@ -93,7 +99,6 @@ func NewWebsocket(host string, options ...optionWebsocket) (interfaces.Dialer, e
 // Connect connects to the peer and actually opens the connection.
 // This function has to be called before writing/ reading from/ to the socket.
 func (ws *websocket) Connect() error {
-
 	// create the function that shall be used for dialing
 	dial := ws.wsDialerFactory(ws.writeBufSize, ws.readBufSize, ws.timeout)
 

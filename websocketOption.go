@@ -2,6 +2,8 @@ package gremcos
 
 import (
 	"time"
+
+	"github.com/rs/zerolog"
 )
 
 // optionWebsocket is the struct for defining configuration for WebSocket dialer
@@ -33,6 +35,13 @@ func SetBufferSize(readBufferSize int, writeBufferSize int) optionWebsocket {
 	return func(ws *websocket) {
 		ws.readBufSize = readBufferSize
 		ws.writeBufSize = writeBufferSize
+	}
+}
+
+// WithWebsocketLogger set the logger that should be used for the websocket
+func WithWebsocketLogger(logger zerolog.Logger) optionWebsocket {
+	return func(ws *websocket) {
+		ws.logger = logger
 	}
 }
 

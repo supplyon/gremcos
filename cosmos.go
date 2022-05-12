@@ -217,7 +217,7 @@ func (c *cosmosImpl) dial() (interfaces.QueryExecutor, error) {
 	// create a new websocket dialer to avoid using the same websocket connection for
 	// multiple queries at the same time
 	// use default settings (timeout, buffersizes etc.) for the websocket
-	dialer, err := c.websocketGenerator(c.host)
+	dialer, err := c.websocketGenerator(c.host, WithWebsocketLogger(c.logger))
 	if err != nil {
 		return nil, err
 	}
