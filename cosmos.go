@@ -1,7 +1,10 @@
 package gremcos
 
 import (
+	"context"
 	"fmt"
+	"net"
+	"strings"
 	"sync"
 	"time"
 
@@ -460,7 +463,29 @@ func (c *cosmosImpl) String() string {
 
 // IsHealthy returns nil if the Cosmos DB connection is alive, otherwise an error is returned
 func (c *cosmosImpl) IsHealthy() error {
+	resolvedHost, errAdditionalDNSTry := additionalDNSTry(c.host)
+	c.logger.Info().Err(errAdditionalDNSTry).Msgf("Host resolved by google DNS: '%s'", resolvedHost)
 	return c.pool.Ping()
+}
+
+func additionalDNSTry(host string) (string, error) {
+	host = strings.ReplaceAll(host, "wss://", "")
+	host = strings.ReplaceAll(host, ":443", "")
+
+	r := &net.Resolver{
+		PreferGo: true,
+		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+			d := net.Dialer{
+				Timeout: time.Second,
+			}
+			return d.DialContext(ctx, network, "8.8.8.8:53")
+		},
+	}
+	ip, err := r.LookupHost(context.Background(), host)
+	if err != nil {
+		return "", errors.Wrap(err, "looking up host")
+	}
+	return fmt.Sprintf("%#v", ip), nil
 }
 
 // updateRequestMetrics updates the request relevant metrics based on the given chunk of responses

@@ -81,6 +81,7 @@ func verboseDialerfunc(logger zerolog.Logger) func(network, addr string) (net.Co
 			dialDur := time.Since(dialStart)
 			logger.Warn().Err(err).Msgf("Dialing %#v %#v failed: %v after %s", network, addr, err, dialDur)
 		}
+
 		return conn, errors.Wrap(err, "dialing to cosmos")
 	}
 }
