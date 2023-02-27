@@ -40,6 +40,19 @@ type Graph interface {
 	E() Edge
 }
 
+// Value represents a QueryBuilder that can be used to create
+// queries that return values
+type Value interface {
+	QueryBuilder
+
+	// Fold adds .fold() to the query.
+	Fold() Value
+
+	// Add can be used to add a custom QueryBuilder
+	// e.g. g.V().Add(NewSimpleQB(".myCustomCall('%s')",label))
+	Add(builder QueryBuilder) Value
+}
+
 // Vertex represents a QueryBuilder that can be used to create
 // queries on vertex level
 type Vertex interface {
@@ -76,7 +89,7 @@ type Vertex interface {
 	HasId(id string) Vertex
 
 	// ValuesBy adds .values('<label>'), e.g. .values('user'), to the query. The query call returns all values of the vertex.
-	ValuesBy(label string) QueryBuilder
+	ValuesBy(label string) Value
 
 	// Values adds .values(), to the query. The query call returns all values with the given label of the vertex.
 	Values() QueryBuilder

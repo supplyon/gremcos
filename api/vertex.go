@@ -181,7 +181,7 @@ func (v *vertex) And(traversals ...interfaces.QueryBuilder) interfaces.Vertex {
 	return v.Add(query)
 }
 
-//  Not adds .not(<traversal>) to the query.
+// Not adds .not(<traversal>) to the query.
 func (v *vertex) Not(not interfaces.QueryBuilder) interfaces.Vertex {
 	return v.Add(NewSimpleQB(".not(%s)", not))
 }
@@ -195,6 +195,7 @@ func (v *vertex) Where(where interfaces.QueryBuilder) interfaces.Vertex {
 // e.g. .has("temperature",23.02) or .has("available",true)
 // The method can also be used to return vertices that have a certain property.
 // Then .has("<prop name>") will be added to the query.
+//
 //	v.Has("prop1")
 func (v *vertex) Has(key string, value ...interface{}) interfaces.Vertex {
 	if len(value) == 0 {
@@ -216,8 +217,9 @@ func (v *vertex) HasLabel(vertexLabel ...string) interfaces.Vertex {
 }
 
 // ValuesBy adds .values("<label>"), e.g. .values("user")
-func (v *vertex) ValuesBy(label string) interfaces.QueryBuilder {
-	return v.Add(NewSimpleQB(".values(\"%s\")", label))
+func (v *vertex) ValuesBy(label string) interfaces.Value {
+	v.Add(NewSimpleQB(".values(\"%s\")", label))
+	return NewValueV(v)
 }
 
 // Values adds .values()
@@ -324,7 +326,9 @@ func (v *vertex) Property(key, value interface{}) interfaces.Vertex {
 }
 
 // toKeyValueString creates a string based on the given key and value as a key/value pair using the following format
+//
 //	(\"key\",\"value\")
+//
 // Depending on the given type of the value the quotes for the value are omitted.
 // e.g. ("temperature",23.02) or ("available",true)
 func toKeyValueString(key, value interface{}) (string, error) {
