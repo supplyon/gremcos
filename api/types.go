@@ -23,13 +23,14 @@ type Property struct {
 // Edge represents the cosmos DB type for an edge.
 // As it would be returned by a call to g.E().
 type Edge struct {
-	ID        string `mapstructure:"id"`
-	Label     string `mapstructure:"label"`
-	Type      Type   `mapstructure:"type"`
-	InVLabel  string `mapstructure:"inVLabel"`
-	InV       string `mapstructure:"inV"`
-	OutVLabel string `mapstructure:"outVLabel"`
-	OutV      string `mapstructure:"outV"`
+	ID         string `mapstructure:"id"`
+	Label      string `mapstructure:"label"`
+	Type       Type   `mapstructure:"type"`
+	InVLabel   string `mapstructure:"inVLabel"`
+	InV        string `mapstructure:"inV"`
+	OutVLabel  string `mapstructure:"outVLabel"`
+	OutV       string `mapstructure:"outV"`
+	Properties VertexPropertyMap `mapstructure:"properties"`
 }
 
 // Vertex represents the cosmos DB type for an vertex.
