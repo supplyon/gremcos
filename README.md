@@ -3,6 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/supplyon/gremcos?status.svg)](https://godoc.org/github.com/supplyon/gremcos) ![build](https://github.com/supplyon/gremcos/workflows/build/badge.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/supplyon/gremcos)](https://goreportcard.com/report/github.com/supplyon/gremcos)
 
 **This repository is archived and thus not under maintenance any more.!!!**
+
 _Why?: We as a company moved away from using Azure Cosmos DB with GremlinAPI do to bad performance and missing features (atomicity). This made it impossible to use the GraphDB features of Cosmos DB in a production environment._
 
 Gremcos is a fork of [schwartzmx/gremtune](https://github.com/schwartzmx/gremtune) with alterations to make it compatible with [Gremlin API of Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/graph-introduction) which is a Graph Database (Gremlin API) for Azure.
